@@ -1,0 +1,25 @@
+version: '3'
+services:
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - 9090:80
+    environment:
+      MYSQL_ROOT_PASSWORD: "mysql1234"
+      MYSQL_ROOT_USERNAME: "root"
+      PMA_HOST: "mysqldb"
+    depends_on:
+      - mysqldb
+  mysqldb:
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3306:3306
+      - 33060:33060
+    volumes:
+      - ./config/mysql/conf.d:/etc/mysql/conf.d
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "mysql1234"
+      MYSQL_ROOT_USERNAME: "root"
