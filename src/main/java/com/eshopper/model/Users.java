@@ -33,12 +33,12 @@ public class Users implements UserDetails {
     @NotBlank
     @Size(max = 50)
     @Email
-    @Column
+    @Column(unique = true)
     private String email;
 
     @NotBlank
     @Size(max = 20)
-    @Column
+    @Column(unique = true)
     private String username;
 
     @Column

@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: insertRoles
+      author: Robiul-Hassan
+      changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            path: db/scripts/04-insert-roles.sql
+            relativeToChangelogFile: false
+            splitStatements: true
+            stripComments: true
+
