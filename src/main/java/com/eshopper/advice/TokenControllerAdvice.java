@@ -1,5 +1,6 @@
 package com.eshopper.advice;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -9,7 +10,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class TokenControllerAdvice {
@@ -29,7 +34,7 @@ public class TokenControllerAdvice {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorMessage resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         return new ErrorMessage(
-                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.NOT_FOUND.value(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false)
@@ -49,17 +54,34 @@ public class TokenControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessage handleValidationExceptions(MethodArgumentNotValidException ex, WebRequest request) {
+        final Map<String, String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .filter(fieldError -> fieldError.getDefaultMessage() != null)
+                .collect(Collectors.toMap(FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage));
 
-        ErrorMessage errorMessage = new ErrorMessage(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+        return new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
                 new Date(),
                 ex.getMessage(),
-                request.getDescription(false)
+                request.getDescription(false),
+                errors
         );
+    }
 
-        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            errorMessage.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        return errorMessage;
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage onConstraintValidationException(ConstraintViolationException ex, WebRequest request) {
+        final Map<String, String> errors = ex.getConstraintViolations()
+                .stream()
+                .collect(Collectors.toMap(constraintViolation -> constraintViolation.getPropertyPath().toString(), ConstraintViolation::getMessage));
+
+        return new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false),
+                errors
+        );
     }
 }

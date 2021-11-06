@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.eshopper.advice.ResourceNotFoundException;
 import com.eshopper.advice.TokenRefreshException;
 import com.eshopper.model.RefreshToken;
 import com.eshopper.repository.RefreshTokenRepository;
@@ -11,6 +12,8 @@ import com.eshopper.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static java.lang.String.format;
 
 
 @Service
@@ -33,14 +36,12 @@ public class RefreshTokenService {
     }
 
     public RefreshToken createRefreshToken(Long userId) {
-        RefreshToken refreshToken = new RefreshToken();
-
-        refreshToken.setUser(userRepository.findById(userId).get());
-        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
-        refreshToken.setToken(UUID.randomUUID().toString());
-
-        refreshToken = refreshTokenRepository.save(refreshToken);
-        return refreshToken;
+        return userRepository.findById(userId)
+                .map(user -> {
+                    final RefreshToken refreshToken = new RefreshToken(user, UUID.randomUUID().toString(), Instant.now().plusMillis(refreshTokenDurationMs));
+                    return refreshTokenRepository.save(refreshToken);
+                })
+                .orElseThrow(() -> new ResourceNotFoundException(format("User: %s, not found", userId)));
     }
 
     public RefreshToken verifyExpiration(RefreshToken token) {
@@ -54,6 +55,8 @@ public class RefreshTokenService {
 
     @Transactional
     public int deleteByUserId(Long userId) {
-        return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
+        return userRepository.findById(userId)
+                .map(refreshTokenRepository::deleteByUser)
+                .orElseThrow(() -> new ResourceNotFoundException(format("User: %s, not found", userId)));
     }
 }

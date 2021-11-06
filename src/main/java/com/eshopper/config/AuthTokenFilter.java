@@ -3,6 +3,7 @@ package com.eshopper.config;
 import com.eshopper.model.Users;
 import com.eshopper.service.CustomUserDetailsService;
 import com.eshopper.utils.JwtUtils;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -18,18 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+@AllArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtUtils jwtUtils;
-
-    public AuthTokenFilter(final CustomUserDetailsService userRepo,
-                           final JwtUtils jwtUtils) {
-        this.userDetailsService = userRepo;
-        this.jwtUtils = jwtUtils;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

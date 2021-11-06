@@ -54,12 +54,14 @@ public class Users implements UserDetails {
     private int active;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Roles> roles = new HashSet<>();
 
-    public Users(String email, String username, String password, String first_name, String lastName) {
+    public Users(String email,
+                 String username,
+                 String password,
+                 String first_name,
+                 String lastName) {
         this.email = email;
         this.username = username;
         this.password = password;

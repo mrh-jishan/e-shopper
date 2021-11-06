@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/v1/auth")
 @RestController
 @AllArgsConstructor
-@Validated
 public class AuthResource {
 
     private final AuthenticationManager authenticationManager;

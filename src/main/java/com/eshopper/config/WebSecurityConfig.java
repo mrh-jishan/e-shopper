@@ -2,6 +2,7 @@ package com.eshopper.config;
 
 import com.eshopper.service.CustomUserDetailsService;
 import com.eshopper.utils.JwtUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,19 +17,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
+@AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtUtils jwtUtils;
     private final AuthEntryPointJwt unauthorizedHandler;
-
-    public WebSecurityConfig(final CustomUserDetailsService userDetailsService,
-                             final JwtUtils jwtUtils,
-                             final AuthEntryPointJwt unauthorizedHandler) {
-        this.userDetailsService = userDetailsService;
-        this.jwtUtils = jwtUtils;
-        this.unauthorizedHandler = unauthorizedHandler;
-    }
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
