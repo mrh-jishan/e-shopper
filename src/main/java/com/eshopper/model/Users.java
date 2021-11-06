@@ -1,6 +1,7 @@
 package com.eshopper.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +23,7 @@ import java.util.Set;
 @ToString
 @Getter
 @Setter
+@NoArgsConstructor
 public class Users implements UserDetails {
 
     @Id
@@ -51,7 +53,7 @@ public class Users implements UserDetails {
     @Column
     private int active;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
