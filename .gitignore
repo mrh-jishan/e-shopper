@@ -33,5 +33,9 @@ build/
 .vscode/
 
 ### mysql ###
-!**/config/**
-!**/data/**
+config/**
+data/**
+
+
+### .mvn ###
+.mvn

@@ -14,7 +14,7 @@ public class Roles implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(length = 20)
     @Enumerated(EnumType.STRING)
@@ -22,6 +22,6 @@ public class Roles implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return this.name.getName();
+        return this.name.name();
     }
 }

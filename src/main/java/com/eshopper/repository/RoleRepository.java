@@ -1,13 +1,13 @@
 package com.eshopper.repository;
 
-
-import com.eshopper.model.Users;
+import com.eshopper.model.Role;
+import com.eshopper.model.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users, Integer> {
-    Optional<Users> findByUsername(String username);
+public interface RoleRepository extends JpaRepository<Roles, Long> {
+    Optional<Roles> findByName(Role name);
 }

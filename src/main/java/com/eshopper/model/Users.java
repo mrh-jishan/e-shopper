@@ -1,5 +1,7 @@
 package com.eshopper.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,11 +20,13 @@ import java.util.Set;
         @UniqueConstraint(columnNames = "username")
 })
 @ToString
+@Getter
+@Setter
 public class Users implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
 
     @NotBlank
     @Size(max = 50)
@@ -52,7 +56,14 @@ public class Users implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Roles> roles = new HashSet<>();
-    ;
+
+    public Users(String email, String username, String password, String first_name, String lastName) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.first_name = first_name;
+        this.lastName = lastName;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
