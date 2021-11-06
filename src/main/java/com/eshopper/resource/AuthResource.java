@@ -91,26 +91,26 @@ public class AuthResource {
         Set<Roles> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Roles userRole = roleRepository.findByName(Role.USER)
+            Roles userRole = roleRepository.findByName(Role.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case ADMIN:
-                        Roles adminRole = roleRepository.findByName(Role.ADMIN)
+                    case ROLE_ADMIN:
+                        Roles adminRole = roleRepository.findByName(Role.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
 
                         break;
-                    case MODERATOR:
-                        Roles modRole = roleRepository.findByName(Role.MODERATOR)
+                    case ROLE_MODERATOR:
+                        Roles modRole = roleRepository.findByName(Role.ROLE_MODERATOR)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
 
                         break;
                     default:
-                        Roles userRole = roleRepository.findByName(Role.USER)
+                        Roles userRole = roleRepository.findByName(Role.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
                 }

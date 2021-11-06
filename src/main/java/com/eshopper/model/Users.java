@@ -16,14 +16,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email"),
-        @UniqueConstraint(columnNames = "username")
-})
-@ToString
-@Getter
-@Setter
+@Table(name = "users")
 @NoArgsConstructor
+@Getter
 public class Users implements UserDetails {
 
     @Id
@@ -55,6 +50,7 @@ public class Users implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @Setter
     private Set<Roles> roles = new HashSet<>();
 
     public Users(String email,

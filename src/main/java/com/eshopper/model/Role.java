@@ -1,8 +1,8 @@
 package com.eshopper.model;
 
 public enum Role {
-    USER,
-    MODERATOR,
-    ADMIN
+    ROLE_USER,
+    ROLE_MODERATOR,
+    ROLE_ADMIN
 }
 
