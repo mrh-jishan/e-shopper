@@ -1,12 +1,11 @@
 package com.eshopper.utils;
 
 
-import com.eshopper.model.Users;
+import com.eshopper.model.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -25,7 +24,7 @@ public class JwtUtils {
         this.jwtExpirationMs = jwtExpirationMs;
     }
 
-    public String generateJwtToken(final Users user) {
+    public String generateJwtToken(final User user) {
         return generateTokenFromUsername(user.getUsername());
     }
 

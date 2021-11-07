@@ -15,7 +15,7 @@ public class RefreshToken {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private Users user;
+    private User user;
 
     @Column(nullable = false, unique = true)
     private String token;
@@ -26,7 +26,7 @@ public class RefreshToken {
     public RefreshToken() {
     }
 
-    public RefreshToken(Users user, String token, Instant expiryDate) {
+    public RefreshToken(User user, String token, Instant expiryDate) {
         this.user = user;
         this.token = token;
         this.expiryDate = expiryDate;

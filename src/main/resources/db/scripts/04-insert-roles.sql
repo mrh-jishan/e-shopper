@@ -1,3 +1,3 @@
-INSERT INTO roles(name) VALUES('USER');
-INSERT INTO roles(name) VALUES('MODERATOR');
-INSERT INTO roles(name) VALUES('ADMIN');
+INSERT INTO roles(authority) VALUES('ROLE_USER');
+INSERT INTO roles(authority) VALUES('ROLE_MODERATOR');
+INSERT INTO roles(authority) VALUES('ROLE_ADMIN');

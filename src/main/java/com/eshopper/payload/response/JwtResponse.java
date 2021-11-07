@@ -1,6 +1,5 @@
 package com.eshopper.payload.response;
 
-import com.eshopper.model.Roles;
 import lombok.Getter;
 
 import java.util.Set;

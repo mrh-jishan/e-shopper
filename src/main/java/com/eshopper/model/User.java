@@ -20,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Users implements UserDetails {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -52,13 +52,13 @@ public class Users implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     @Setter
-    private Set<Roles> roles = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 
-    public Users(String email,
-                 String username,
-                 String password,
-                 String first_name,
-                 String lastName) {
+    public User(String email,
+                String username,
+                String password,
+                String first_name,
+                String lastName) {
         this.email = email;
         this.username = username;
         this.password = password;

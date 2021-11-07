@@ -2,9 +2,9 @@ package com.eshopper.controller;
 
 import com.eshopper.advice.TokenRefreshException;
 import com.eshopper.model.RefreshToken;
-import com.eshopper.model.Role;
 import com.eshopper.model.Roles;
-import com.eshopper.model.Users;
+import com.eshopper.model.Role;
+import com.eshopper.model.User;
 import com.eshopper.payload.request.LogOutRequest;
 import com.eshopper.payload.request.LoginRequest;
 import com.eshopper.payload.request.RegisterRequest;
@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,14 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequestMapping("/v1/auth")
 @RestController
 @AllArgsConstructor
-public class AuthResource {
+public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
@@ -53,11 +51,11 @@ public class AuthResource {
         final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        final Users userDetails = (Users) authentication.getPrincipal();
+        final User userDetails = (User) authentication.getPrincipal();
         final String jwt = jwtUtils.generateJwtToken(userDetails);
 
         final RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-        Set<String> roles = userDetails.getRoles().stream().map(Roles::getAuthority).collect(Collectors.toSet());
+        Set<String> roles = userDetails.getRoles().stream().map(Role::getAuthority).collect(Collectors.toSet());
         return ResponseEntity.ok(new JwtResponse(jwt,
                 refreshToken.getToken(),
                 userDetails.getId(),
@@ -81,32 +79,32 @@ public class AuthResource {
         }
 
         // Create new user's account
-        Users user = new Users(request.getEmail(), request.getUsername(), encoder.encode(request.getPassword()), request.getFirstName(), request.getLastName());
+        User user = new User(request.getEmail(), request.getUsername(), encoder.encode(request.getPassword()), request.getFirstName(), request.getLastName());
 
-        Set<Role> strRoles = request.getRole();
-        Set<Roles> roles = new HashSet<>();
+        Set<Roles> strRoles = request.getRoles();
+        Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Roles userRole = roleRepository.findByName(Role.ROLE_USER)
+            Role userRole = roleRepository.findByAuthority(Roles.ROLE_USER.name())
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
         } else {
-            strRoles.forEach(role -> {
-                switch (role) {
+            strRoles.forEach(roless -> {
+                switch (roless) {
                     case ROLE_ADMIN:
-                        Roles adminRole = roleRepository.findByName(Role.ROLE_ADMIN)
+                        Role adminRole = roleRepository.findByAuthority(Roles.ROLE_ADMIN.name())
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
 
                         break;
                     case ROLE_MODERATOR:
-                        Roles modRole = roleRepository.findByName(Role.ROLE_MODERATOR)
+                        Role modRole = roleRepository.findByAuthority(Roles.ROLE_MODERATOR.name())
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
 
                         break;
                     default:
-                        Roles userRole = roleRepository.findByName(Role.ROLE_USER)
+                        Role userRole = roleRepository.findByAuthority(Roles.ROLE_USER.name())
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
                 }

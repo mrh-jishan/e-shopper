@@ -1,6 +1,6 @@
 package com.eshopper.payload.request;
 
-import com.eshopper.model.Role;
+import com.eshopper.model.Roles;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +31,7 @@ public class RegisterRequest {
     @Email
     private String email;
     
-    private Set<Role> role;
+    private Set<Roles> roles;
     
     @NotBlank
     @Size(min = 6, max = 40)

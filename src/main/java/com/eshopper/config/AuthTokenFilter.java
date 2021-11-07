@@ -1,6 +1,6 @@
 package com.eshopper.config;
 
-import com.eshopper.model.Users;
+import com.eshopper.model.User;
 import com.eshopper.service.CustomUserDetailsService;
 import com.eshopper.utils.JwtUtils;
 import lombok.AllArgsConstructor;
@@ -51,7 +51,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             // Get user identity and set it on the spring security context
             String username = jwtUtils.getUserNameFromJwtToken(token);
             logger.info("Username: {}", username);
-            Users user = userDetailsService.loadUserByUsername(username);
+            User user = userDetailsService.loadUserByUsername(username);
             logger.info("User: {}", user);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
