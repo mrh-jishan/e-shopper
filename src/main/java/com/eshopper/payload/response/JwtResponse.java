@@ -1,8 +1,9 @@
 package com.eshopper.payload.response;
 
+import com.eshopper.model.Roles;
 import lombok.Getter;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 public class JwtResponse {
@@ -12,9 +13,14 @@ public class JwtResponse {
     private Long id;
     private String username;
     private String email;
-    private List<String> roles;
+    private Set<String> roles;
 
-    public JwtResponse(String accessToken, String refreshToken, Long id, String username, String email, List<String> roles) {
+    public JwtResponse(String accessToken,
+                       String refreshToken,
+                       Long id,
+                       String username,
+                       String email,
+                       Set<String> roles) {
         this.token = accessToken;
         this.refreshToken = refreshToken;
         this.id = id;

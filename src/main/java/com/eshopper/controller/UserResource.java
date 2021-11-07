@@ -1,4 +1,4 @@
-package com.eshopper.resource;
+package com.eshopper.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;

@@ -1,6 +1,5 @@
-package com.eshopper.resource;
+package com.eshopper.controller;
 
-import com.eshopper.advice.ResourceNotFoundException;
 import com.eshopper.advice.TokenRefreshException;
 import com.eshopper.model.RefreshToken;
 import com.eshopper.model.Role;
@@ -25,7 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,13 +53,11 @@ public class AuthResource {
         final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String jwt = jwtUtils.generateJwtToken(authentication);
-
         final Users userDetails = (Users) authentication.getPrincipal();
-        final List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        final String jwt = jwtUtils.generateJwtToken(userDetails);
 
         final RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
+        Set<String> roles = userDetails.getRoles().stream().map(Roles::getAuthority).collect(Collectors.toSet());
         return ResponseEntity.ok(new JwtResponse(jwt,
                 refreshToken.getToken(),
                 userDetails.getId(),
@@ -123,15 +119,14 @@ public class AuthResource {
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
-    @PostMapping("/refreshtoken")
-    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
-        String requestRefreshToken = request.getRefreshToken();
-
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequest request) {
+        final String requestRefreshToken = request.getRefreshToken();
         return refreshTokenService.findByToken(requestRefreshToken)
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-                    String token = jwtUtils.getUserNameFromJwtToken(user.getUsername());
+                    final String token = jwtUtils.generateTokenFromUsername(user.getUsername());
                     return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,

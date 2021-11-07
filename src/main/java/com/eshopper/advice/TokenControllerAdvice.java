@@ -12,7 +12,6 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,18 +29,6 @@ public class TokenControllerAdvice {
                 request.getDescription(false)
         );
     }
-
-//    @ExceptionHandler(value = AccessDeniedException.class)
-//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-//    public ErrorMessage handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
-//        return new ErrorMessage(
-//                HttpStatus.UNAUTHORIZED.value(),
-//                new Date(),
-//                ex.getMessage(),
-//                request.getDescription(false)
-//        );
-//    }
-
 
     @ExceptionHandler(value = {UsernameNotFoundException.class, ResourceNotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)

@@ -19,6 +19,7 @@ import java.util.Set;
 @Table(name = "users")
 @NoArgsConstructor
 @Getter
+@ToString
 public class Users implements UserDetails {
 
     @Id
