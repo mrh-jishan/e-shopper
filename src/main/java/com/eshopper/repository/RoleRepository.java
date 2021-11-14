@@ -1,6 +1,5 @@
 package com.eshopper.repository;
 
-import com.eshopper.model.Roles;
 import com.eshopper.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

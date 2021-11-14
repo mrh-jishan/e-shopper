@@ -1,6 +1,7 @@
 package com.eshopper.repository;
 
 
+import com.eshopper.model.Post;
 import com.eshopper.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

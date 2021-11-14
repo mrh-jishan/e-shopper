@@ -2,12 +2,14 @@ package com.eshopper.model;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
 
 @Entity(name = "refresh_token")
 @Getter
+@NoArgsConstructor
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,9 +24,6 @@ public class RefreshToken {
 
     @Column(nullable = false)
     private Instant expiryDate;
-
-    public RefreshToken() {
-    }
 
     public RefreshToken(User user, String token, Instant expiryDate) {
         this.user = user;

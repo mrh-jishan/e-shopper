@@ -1,8 +1,6 @@
 package com.eshopper.model;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -10,7 +8,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "roles")
 @NoArgsConstructor
-@ToString
 public class Role implements GrantedAuthority {
 
     @Id

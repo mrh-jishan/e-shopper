@@ -2,7 +2,7 @@ package com.eshopper.controller;
 
 import com.eshopper.advice.TokenRefreshException;
 import com.eshopper.model.RefreshToken;
-import com.eshopper.model.Roles;
+import com.eshopper.model.UserRoles;
 import com.eshopper.model.Role;
 import com.eshopper.model.User;
 import com.eshopper.payload.request.LogOutRequest;
@@ -81,30 +81,30 @@ public class AuthController {
         // Create new user's account
         User user = new User(request.getEmail(), request.getUsername(), encoder.encode(request.getPassword()), request.getFirstName(), request.getLastName());
 
-        Set<Roles> strRoles = request.getRoles();
+        Set<UserRoles> strRoles = request.getRoles();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Role userRole = roleRepository.findByAuthority(Roles.ROLE_USER.name())
+            Role userRole = roleRepository.findByAuthority(UserRoles.ROLE_USER.name())
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
         } else {
             strRoles.forEach(roless -> {
                 switch (roless) {
                     case ROLE_ADMIN:
-                        Role adminRole = roleRepository.findByAuthority(Roles.ROLE_ADMIN.name())
+                        Role adminRole = roleRepository.findByAuthority(UserRoles.ROLE_ADMIN.name())
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
 
                         break;
                     case ROLE_MODERATOR:
-                        Role modRole = roleRepository.findByAuthority(Roles.ROLE_MODERATOR.name())
+                        Role modRole = roleRepository.findByAuthority(UserRoles.ROLE_MODERATOR.name())
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
 
                         break;
                     default:
-                        Role userRole = roleRepository.findByAuthority(Roles.ROLE_USER.name())
+                        Role userRole = roleRepository.findByAuthority(UserRoles.ROLE_USER.name())
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
                 }
